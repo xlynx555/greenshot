@@ -53,7 +53,7 @@ namespace Greenshot.Helpers
         private static readonly ILog Log = LogManager.GetLogger(typeof(CaptureHelper));
 
         private static readonly CoreConfiguration CoreConfig = IniConfig.GetIniSection<CoreConfiguration>();
-        
+        private static bool _isCaptureActive;
         private List<WindowDetails> _windows = new();
         private WindowDetails _selectedCaptureWindow;
         private NativeRect _captureRect = NativeRect.Empty;
@@ -99,6 +99,11 @@ namespace Greenshot.Helpers
 
         public static void CaptureClipboard(IDestination destination = null)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.Clipboard);
             if (destination != null)
             {
@@ -106,73 +111,133 @@ namespace Greenshot.Helpers
             }
 
             captureHelper.MakeCapture();
+            _isCaptureActive = false;
         }
 
         public static void CaptureRegion(bool captureMouse)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.Region, captureMouse);
             captureHelper.MakeCapture();
+            _isCaptureActive = false;
         }
 
         public static void CaptureRegion(bool captureMouse, IDestination destination)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.Region, captureMouse, destination);
             captureHelper.MakeCapture();
+            _isCaptureActive = false;
         }
 
         public static void CaptureRegion(bool captureMouse, NativeRect region)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.Region, captureMouse);
             captureHelper.MakeCapture(region);
+            _isCaptureActive = false;
         }
 
         public static void CaptureFullscreen(bool captureMouse, ScreenCaptureMode screenCaptureMode)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.FullScreen, captureMouse)
             {
                 _screenCaptureMode = screenCaptureMode
             };
             captureHelper.MakeCapture();
+            _isCaptureActive = false;
         }
 
         public static void CaptureLastRegion(bool captureMouse)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.LastRegion, captureMouse);
             captureHelper.MakeCapture();
+            _isCaptureActive = false;
         }
 
         public static void CaptureIe(bool captureMouse, WindowDetails windowToCapture)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.IE, captureMouse)
             {
                 SelectedCaptureWindow = windowToCapture
             };
             captureHelper.MakeCapture();
+            _isCaptureActive = false;
         }
 
         public static void CaptureWindow(bool captureMouse)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.ActiveWindow, captureMouse);
             captureHelper.MakeCapture();
+            _isCaptureActive = false;
         }
 
         public static void CaptureWindow(WindowDetails windowToCapture)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.ActiveWindow)
             {
                 SelectedCaptureWindow = windowToCapture
             };
             captureHelper.MakeCapture();
+            _isCaptureActive = false;
         }
 
         public static void CaptureWindowInteractive(bool captureMouse)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.Window, captureMouse);
             captureHelper.MakeCapture();
+            _isCaptureActive = false;
         }
 
         public static void CaptureFile(string filename, IDestination destination = null)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.File);
 
             if (destination != null)
@@ -181,15 +246,22 @@ namespace Greenshot.Helpers
             }
 
             captureHelper.MakeCapture(filename);
+            _isCaptureActive = false;
         }
 
         public static void ImportCapture(ICapture captureToImport)
         {
+            if (_isCaptureActive)
+            {
+                return;
+            }
+            _isCaptureActive = true;
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.File)
             {
                 _capture = captureToImport
             };
             captureHelper.HandleCapture();
+            _isCaptureActive = false;
         }
 
         public CaptureHelper AddDestination(IDestination destination)
